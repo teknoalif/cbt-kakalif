@@ -34,8 +34,8 @@ const BANK_SOAL = [
 export default function CBT_PTS_PAS() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [timeLeft, setTimeLeft] = useState(5400);
-  const [jawaban, setJawaban] = useState({});
-  const [ragu, setRagu] = useState({});
+  const [jawaban, setJawaban] = useState<Record<number, string>>({});
+  const [ragu, setRagu] = useState<Record<number, boolean>>({});
   const [isFinished, setIsFinished] = useState(false);
 
   const soalAktif = BANK_SOAL[currentIdx];
@@ -48,7 +48,8 @@ export default function CBT_PTS_PAS() {
     }
   }, [isFinished]);
 
-  const formatTime = (seconds) => {
+  // FIX TYPE ERROR DISINI
+  const formatTime = (seconds: number) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
@@ -58,7 +59,7 @@ export default function CBT_PTS_PAS() {
   if (isFinished) {
     const totalBenar = Object.keys(jawaban).filter(id => {
       const s = BANK_SOAL.find(item => item.id === parseInt(id));
-      return s && jawaban[id] === s.kunci;
+      return s && jawaban[parseInt(id)] === s.kunci;
     }).length;
     const skor = (totalBenar / totalSoal) * 100;
 
@@ -143,7 +144,7 @@ export default function CBT_PTS_PAS() {
                 const isCurrent = currentIdx === index;
                 let c = "bg-white border-slate-50 text-slate-200";
                 if (isDone) c = "bg-emerald-500 border-emerald-500 text-white font-black";
-                if (isRagu) c = "bg-yellow-400 border-yellow-500 text-white font-black";
+                if (isRagu) c = "bg-yellow-400 border-yellow-400 text-white font-black";
                 if (isCurrent) c = "ring-[6px] ring-indigo-50 border-indigo-600 text-indigo-700 font-black scale-110 shadow-lg";
                 return (
                   <button key={s.id} onClick={() => setCurrentIdx(index)} className={`h-14 rounded-2xl text-lg border-2 transition-all ${c}`}>
